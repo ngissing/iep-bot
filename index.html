@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IEP Goal Builder · NEFLN</title>
+<meta name="description" content="Draft curriculum-linked IEP goals for the DET template, for SSG discussion and agreement.">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&family=Kaushan+Script&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+</head>
+<body>
+
+<header class="top">
+  <a class="brand" href="https://www.nefln.vic.edu.au/" target="_blank" rel="noopener" title="North East Flexible Learning Network">
+    <img class="logo" src="assets/nefln-logo.png" alt="North East Flexible Learning Network"
+         onerror="this.hidden=true;this.nextElementSibling.hidden=false">
+    <span class="wordmark" hidden aria-hidden="true">
+      <span class="wm-disc">North<br>East</span>
+      <span class="wm-text"><span class="wm-big">flexible</span><span class="wm-small">Learning Network</span></span>
+    </span>
+  </a>
+  <div class="appname">
+    <h1>IEP goal builder</h1>
+    <span class="sub">DET template · Literacy, Numeracy, Wellbeing</span>
+  </div>
+  <span class="stamp">DRAFT</span>
+  <div class="tools">
+    <label class="cfg" title="How many short-term goals to draft per area. The template needs only one — draft extras and delete the ones you don't want.">Short-term goals
+      <select id="minGoals"><option value="1" selected>1</option><option value="2">2</option><option value="3">3</option></select>
+    </label>
+    <button id="reset" class="reset">New plan</button>
+  </div>
+</header>
+<nav class="stepper" aria-label="Interview stage"><div class="rail" id="rail"></div></nav>
+
+<div class="wrap">
+  <main class="chat" aria-label="Interview">
+    <div id="gate" class="gate">
+      <div class="gatebox">
+        <div class="gatemark" aria-hidden="true">IEP</div>
+        <b>IEP goal builder</b>
+        <p>Enter the access password to use the chat. Ask the tool's administrator if you don't have it.</p>
+        <input type="text" id="gateUrl" placeholder="https://your-worker.workers.dev" autocomplete="off" spellcheck="false">
+        <input type="password" id="gateInput" placeholder="Access password" autocomplete="off">
+        <button id="gateGo">Continue</button>
+        <span class="gatefine">Your password isn't saved — you'll enter it again next time you open this.</span>
+      </div>
+    </div>
+    <div class="log" id="log" aria-live="polite"></div>
+    <div class="resume" id="resume">
+      Picking up someone else's draft?
+      <button id="resumeBtn">Upload a part-completed IEP (.docx)</button>
+      <input type="file" id="resumeFile" accept=".docx" hidden>
+    </div>
+    <div class="ask">
+      <textarea id="in" rows="1" placeholder="Type your reply…" aria-label="Your reply"></textarea>
+      <button class="send" id="send" aria-label="Send">Send</button>
+    </div>
+    <div class="hint">Pseudonyms only. Real names, DOB, VSN and school names are blocked before sending.</div>
+  </main>
+
+  <aside class="form" id="form" aria-label="IEP plan">
+    <div class="formintro">The plan builds itself here as you chat. You can edit any box directly, but there's no need to start here.</div>
+
+    <section class="card">
+      <div class="stage">Header <span>completed offline in Word</span></div>
+      <div class="blank">Name, DOB, school, teacher, SSG members and dates stay blank by design — you fill them in Word. Year level is the one field carried through: <b id="yl">—</b></div>
+    </section>
+
+    <section class="card">
+      <div class="stage">Stage 1 — Assess <span>shared across all three areas</span></div>
+      <textarea class="cell" id="assess" placeholder="Strengths and interests · Entry-level skills by area · Challenges and barriers"></textarea>
+    </section>
+
+    <div id="areas"></div>
+
+    <section class="card">
+      <div class="stage">Curriculum lookup <span id="cov"></span></div>
+      <div class="panel">
+        <div class="lookup"><input id="q" placeholder="Search a skill — “fractions”, “help-seeking”"><button class="send" id="qgo">Find</button></div>
+        <div id="hits" class="fine">Only codes in this list can be used. Anything else must be written “code to be confirmed by teacher”.</div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="stage">Quality rubric <span>DET checklist · indicators 2–7</span></div>
+      <div class="panel" id="rubric"></div>
+    </section>
+
+    <section class="card">
+      <div class="stage">Checks</div>
+      <div class="panel" id="checks"></div>
+    </section>
+
+    <section class="card">
+      <div class="stage">Build</div>
+      <div class="fine">The official DET IEP template is built in — every plan fills the same file. Writes only into the template's own cells and clones its own rows — everything you don't see changed is byte-identical to the official template. Draft for SSG discussion and agreement; goals are not agreed until the SSG agrees them.</div>
+    </section>
+
+    <div class="buildbar">
+      <div id="dl"></div>
+      <button class="build" id="build" disabled>Fill the DET template</button>
+    </div>
+  </aside>
+</div>
+
+<script src="js/config.js"></script>
+<script src="js/data/curriculum.js"></script>
+<script src="js/data/adjustments.js"></script>
+<script src="js/data/pds.js"></script>
+<script src="js/data/vpc.js"></script>
+<script src="js/context.js"></script>
+<script src="js/state.js"></script>
+<script src="js/privacy.js"></script>
+<script src="js/chat.js"></script>
+<script src="js/prompt.js"></script>
+<script src="js/parse.js"></script>
+<script src="js/api.js"></script>
+<script src="js/form.js"></script>
+<script src="js/checks.js"></script>
+<script src="js/rubric.js"></script>
+<script src="js/lookup.js"></script>
+<script src="js/docx.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
