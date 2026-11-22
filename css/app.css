@@ -72,7 +72,7 @@ textarea,input,select{font-family:inherit;font-size:13px;color:var(--ink)}
 /* ---- chat ---- */
 .chat{border-right:1px solid var(--line);display:flex;flex-direction:column;background:var(--card);min-height:0;position:relative}
 .gate{display:none;position:absolute;inset:0;z-index:10;background:rgba(243,244,247,.97);align-items:center;justify-content:center;padding:24px}
-.gatebox{max-width:340px;width:100%;text-align:center;background:var(--card);border:1px solid var(--line);border-top:4px solid var(--navy);
+.gatebox{max-width:340px;width:100%;text-align:center;background:var(--card);border:1px solid var(--line);
   border-radius:var(--r);padding:26px 24px;box-shadow:var(--shadow)}
 .gatemark{width:44px;height:44px;border-radius:50%;background:var(--navy);color:var(--gold);font-weight:700;font-size:12px;letter-spacing:.06em;
   display:flex;align-items:center;justify-content:center;margin:0 auto 12px}
