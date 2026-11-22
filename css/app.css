@@ -175,7 +175,7 @@ td[contenteditable]:focus{background:#FFFBEF;outline:2px solid var(--gold);outli
 .lookup input:focus{border-color:var(--navy);background:#fff;outline:none}
 .hit{border-bottom:1px solid var(--line-soft);padding:7px 8px;font-size:12px;cursor:pointer;border-radius:4px}
 .hit:hover{background:var(--field)}
-.hit.pick{background:var(--navy-soft);box-shadow:inset 3px 0 0 var(--red)}
+.hit.pick{background:var(--navy-soft);outline:1px solid var(--navy-line);outline-offset:-1px}
 .hit code{font-family:var(--mono);color:var(--navy);font-weight:600}
 .hit em{color:var(--muted);font-style:normal}
 
