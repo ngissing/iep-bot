@@ -7,6 +7,7 @@ async function ask(text){
   const bad = guard(text);
   if (bad){ say(bad,'sys'); return; }
   say(text,'you');
+  removeStartForm();   // typing in the chat instead of using the form is fine too
   const rb = $('resume'); if (rb) rb.style.display = 'none';
   history.push({role:'user',content:text});
   $('send').disabled = true;

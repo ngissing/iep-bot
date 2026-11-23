@@ -5,7 +5,9 @@
 document.getElementById('cov').textContent =
   Object.entries(COVER).map(([a,s])=>a.replace('Personal and Social Capability','P&SC').replace('Health and Physical Education','HPE')+' '+s.size+' lvl').join(' · ');
 
-/* ---------- new plan ---------- */
+/* ---------- new plan ----------
+   Plans open with the start form (startform.js). GREETING is shown instead when the
+   teacher picks "Skip — I'll type it instead". */
 const GREETING = '**Start here — type in the box below.**\n\nThis builds a full IEP with three parts: **Literacy**, **Numeracy** and **Wellbeing**. Each gets a curriculum-linked long-term goal and short-term goals under it. We do one area at a time, and the plan fills in on the right as we go.\n\n**To begin, tell me in one message:**\n- Year level\n- Roughly where the student is working in each area\n- Any diagnosis or funded support\n- Which term the goals run for\n\nRough is fine. *"Year 8, working around Level 5 maths, well below in writing, fine socially. Dyslexia. Term 3."* is a perfect opening.\n\nUse a pseudonym — no real names, DOB, VSN or school name.';
 
 /* Clearing `history` is the point, not a side effect: without it the previous student's
@@ -24,7 +26,7 @@ function reset(){
   log.innerHTML = '';
   if ($('resume')) $('resume').style.display = 'flex';
   rail(); render();
-  say(GREETING).classList.add('opening');
+  showStartForm();
   say('Previous plan cleared — chat history and all, so nothing carries over to the next student.','note');
 }
 
@@ -59,6 +61,7 @@ $('resumeFile').onchange = async e=>{
   try{
     const loaded = await importPlan(f);
     plan = loaded;
+    removeStartForm();
     const has = AREAS.filter(a=>plan.areas[a].goals.length || plan.areas[a].ltg);
     const gaps = AREAS.filter(a=>!plan.areas[a].goals.length && !plan.areas[a].ltg);
     if (!has.length){ say('That template opened, but every area was still empty — starting fresh from it.','note'); }
@@ -158,5 +161,5 @@ $('in').addEventListener('keydown',e=>{ if(e.key==='Enter'&&!e.shiftKey){e.preve
 $('in').addEventListener('input',function(){ this.style.height='auto'; this.style.height=Math.min(120,this.scrollHeight)+'px'; });
 
 rail(); render();
-say(GREETING).classList.add('opening');
+showStartForm();
 showGate();   // password first — nothing in the app works without it
