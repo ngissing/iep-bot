@@ -3,10 +3,7 @@
    index.html, sharing top-level names with the other files. */
 
 async function ask(text){
-  if (!accessKey){
-    const box = $('gate');
-    if (box){ box.style.display='flex'; $('gateInput').focus(); pendingSend = text; return; }
-  }
+  if (!accessKey){ pendingSend = text; showGate(); return; }
   const bad = guard(text);
   if (bad){ say(bad,'sys'); return; }
   say(text,'you');
@@ -35,8 +32,10 @@ async function ask(text){
     });
     if (res.status === 401 || res.status === 403){
       t.remove();
-      say('That access password wasn\'t accepted. Check it with whoever set up the tool, then reload and re-enter it.','sys');
-      accessKey = ''; $('send').disabled = false; return;
+      say('That access password is no longer accepted. Enter it again to carry on — nothing in the plan was lost.','sys');
+      accessKey = ''; $('send').disabled = false;
+      showGate('The password was rejected. It may have been changed — check with whoever set up the tool.');
+      return;
     }
     if (res.status === 429){
       t.remove();

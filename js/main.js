@@ -77,22 +77,75 @@ $('resumeFile').onchange = async e=>{
 let pendingSend = null;
 function needsUrl(){ return !PROXY_SET && !proxyUrl; }
 
-function submitGate(){
+/* The password overlay covers the whole app until a password the Worker accepts is
+   entered. While it's up, the app behind it is made inert so keyboard users can't tab
+   into it. Called on load, and again if the Worker later rejects the password. */
+function showGate(message){
+  $('gate').style.display = 'flex';
+  document.querySelectorAll('.top, .stepper, .wrap').forEach(el=>{ el.inert = true; });
+  const err = $('gateErr');
+  err.textContent = message || '';
+  err.hidden = !message;
+  if (needsUrl()) $('gateUrl').style.display = '';
+  (needsUrl() ? $('gateUrl') : $('gateInput')).focus();
+}
+function hideGate(){
+  $('gate').style.display = 'none';
+  document.querySelectorAll('.top, .stepper, .wrap').forEach(el=>{ el.inert = false; });
+  $('gateErr').hidden = true;
+}
+
+/* Checks a password with the Worker WITHOUT calling the AI. It sends an empty request:
+   the Worker checks the password first and answers a wrong one with 401; a right one
+   gets past that and is then refused for having no model (400), before anything reaches
+   Anthropic. So 401/403 = wrong password, any other answer = accepted. Each check
+   counts once toward the Worker's daily call cap, like one chat message would. */
+async function verifyKey(key){
+  const res = await fetch(proxyUrl, {
+    method:'POST',
+    headers:{'Content-Type':'application/json', 'X-Access-Key': key},
+    body:'{}'
+  });
+  return !(res.status === 401 || res.status === 403);
+}
+
+let gateBusy = false;
+async function submitGate(){
+  if (gateBusy) return;
   if (needsUrl()){
     let u = $('gateUrl').value.trim().replace(/\/+$/,'');
     if (!u){ $('gateUrl').focus(); return; }
     if (!/^https?:\/\//i.test(u)) u = 'https://' + u;   // a bare host is the commonest slip
     proxyUrl = u;
-    rememberUrl(u);
-    $('gateUrl').style.display = 'none';
   }
   const v = $('gateInput').value.trim();
   if (!v){ $('gateInput').focus(); return; }
-  accessKey = v;
-  $('gate').style.display = 'none';
-  $('gateInput').value = '';
-  const t = pendingSend; pendingSend = null;
-  if (t) ask(t);
+
+  gateBusy = true;
+  const btn = $('gateGo'), label = btn.textContent;
+  btn.disabled = true; btn.textContent = 'Checking…';
+  try {
+    const ok = await verifyKey(v);
+    if (!ok){
+      $('gateInput').value = '';
+      showGate("That password wasn't accepted. Check it with whoever set up the tool and try again.");
+      return;
+    }
+    if (!PROXY_SET) rememberUrl(proxyUrl);
+    accessKey = v;
+    $('gateInput').value = '';
+    $('gateUrl').style.display = 'none';
+    hideGate();
+    $('in').focus();
+    const t = pendingSend; pendingSend = null;
+    if (t) ask(t);
+  } catch (e) {
+    if (!PROXY_SET) proxyUrl = '';   // a wrong address is the likeliest cause — ask for it again
+    showGate(`Couldn't reach the server${PROXY_SET ? '' : ' at that address'}. Check your connection and try again.`);
+  } finally {
+    gateBusy = false;
+    btn.disabled = false; btn.textContent = label;
+  }
 }
 $('gateGo').onclick = submitGate;
 $('gateInput').addEventListener('keydown', e=>{ if(e.key==='Enter') submitGate(); });
@@ -106,3 +159,4 @@ $('in').addEventListener('input',function(){ this.style.height='auto'; this.styl
 
 rail(); render();
 say(GREETING).classList.add('opening');
+showGate();   // password first — nothing in the app works without it

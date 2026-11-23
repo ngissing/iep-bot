@@ -14,6 +14,19 @@
 </head>
 <body>
 
+<div id="gate" class="gate" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
+  <div class="gatebox">
+    <img class="gatelogo" src="assets/nefln-logo.png" alt="North East Flexible Learning Network">
+    <b id="gateTitle">IEP goal builder</b>
+    <p>Enter the access password to open the goal builder. Ask the tool's administrator if you don't have it.</p>
+    <input type="text" id="gateUrl" placeholder="https://your-worker.workers.dev" autocomplete="off" spellcheck="false" aria-label="Worker address">
+    <input type="password" id="gateInput" placeholder="Access password" autocomplete="off" aria-label="Access password">
+    <div class="gateerr" id="gateErr" role="alert" hidden></div>
+    <button id="gateGo">Open the goal builder</button>
+    <span class="gatefine">Your password isn't saved — you'll enter it again next time you open this.</span>
+  </div>
+</div>
+
 <header class="top">
   <a class="brand" href="https://www.nefln.vic.edu.au/" target="_blank" rel="noopener" title="North East Flexible Learning Network">
     <img class="logo" src="assets/nefln-logo.png" alt="North East Flexible Learning Network"
@@ -39,17 +52,6 @@
 
 <div class="wrap">
   <main class="chat" aria-label="Interview">
-    <div id="gate" class="gate">
-      <div class="gatebox">
-        <div class="gatemark" aria-hidden="true">IEP</div>
-        <b>IEP goal builder</b>
-        <p>Enter the access password to use the chat. Ask the tool's administrator if you don't have it.</p>
-        <input type="text" id="gateUrl" placeholder="https://your-worker.workers.dev" autocomplete="off" spellcheck="false">
-        <input type="password" id="gateInput" placeholder="Access password" autocomplete="off">
-        <button id="gateGo">Continue</button>
-        <span class="gatefine">Your password isn't saved — you'll enter it again next time you open this.</span>
-      </div>
-    </div>
     <div class="log" id="log" aria-live="polite"></div>
     <div class="resume" id="resume">
       Picking up someone else's draft?

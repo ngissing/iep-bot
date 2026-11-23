@@ -126,3 +126,10 @@ test('index.html only references files that exist', () => {
     assert.ok(existsSync(path.join(root, r)), `missing ${r}`);
   assert.ok(existsSync(path.join(root, 'template/iep-template.docx')), 'missing DET template');
 });
+
+test('every app script compiles (catches typos like an unescaped quote)', () => {
+  const html = read('index.html');
+  const scripts = [...html.matchAll(/<script src="(js\/[^"]+)"/g)].map(m => m[1]);
+  assert.ok(scripts.length > 10, 'expected the app scripts in index.html');
+  for (const s of scripts) assert.doesNotThrow(() => new vm.Script(read(s), { filename: s }), `${s} has a syntax error`);
+});

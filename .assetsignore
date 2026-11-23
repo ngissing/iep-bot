@@ -1,0 +1,12 @@
+# Files Cloudflare should NOT serve on the live site (same syntax as .gitignore).
+# Only index.html, css/, js/, assets/ and template/ are the app.
+.assetsignore
+.git
+.gitignore
+.gitattributes
+.claude
+.impeccable
+docs/
+tests/
+worker/
+README.md
