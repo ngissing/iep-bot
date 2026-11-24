@@ -26,7 +26,7 @@ Every other file is listed in [docs/design.md](docs/design.md).
 
 ## NEFLN logo
 
-The header shows `assets/nefln-logo.png` (720×135, taken from the NEFLN website header).
+The header shows `assets/nefln-logo.png` (458×135, taken from the NEFLN website header and cropped to the artwork so it centres).
 If that file is missing, a text wordmark in the brand script font is shown instead.
 For a sharper logo, replace it with an official copy (PNG or SVG, 140px+ tall) of the same name.
 If you use an SVG, change the `src` in `index.html` to `assets/nefln-logo.svg`.
