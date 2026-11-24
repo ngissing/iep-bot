@@ -15,6 +15,7 @@ const GREETING = '**Start here — type in the box below.**\n\nThis builds a ful
    loaded — it's the same blank DET file for every student. */
 function reset(){
   plan = blankPlan();
+  planRevealed = false;
   history = [];
   phase = 0;
   if (lastURL){ URL.revokeObjectURL(lastURL); lastURL = null; }

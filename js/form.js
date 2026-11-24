@@ -56,6 +56,21 @@ function render(){
       : `<tr><td colspan="3" class="empty" style="padding:12px">Strategies appear once this area's goals are chosen.</td></tr>`;
   });
   check();
+  updateLayout();
+}
+
+/* Simple start: until the first goal content arrives (normally the literacy draft), the
+   page shows only the chat and start form — no plan panel, no stage bar. Once revealed,
+   the plan stays visible for the rest of that plan, even if goals are later deleted.
+   reset() sets planRevealed back to false. */
+let planRevealed = false;
+function updateLayout(){
+  if (!planRevealed && AREAS.some(a=>plan.areas[a].ltg || plan.areas[a].goals.length)){
+    planRevealed = true;
+    if (document.body.classList.contains('intro'))
+      say('Your plan is now showing on the right. It fills in as we go, and you can edit any box there directly.','note');
+  }
+  document.body.classList.toggle('intro', !planRevealed);
 }
 
 /* Deleting a short-term goal takes its strategies row with it and renumbers what's left,
